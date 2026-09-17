@@ -1,0 +1,48 @@
+---
+syntax: manifest_v1
+description: 'Sunrise, sunset, twilight and moon phase for this screen, computed on the player with no network access'
+author: Screenly, Inc.
+categories:
+  - Utilities
+ready_signal: true
+settings:
+  location_name:
+    type: string
+    default_value: ''
+    title: Location Name
+    optional: true
+    help_text: |
+      Name shown as the heading, e.g. "Dubai" or "Lobby". Defaults to the
+      screen's own location field, and is left out entirely when neither is set.
+  override_coordinates:
+    type: string
+    default_value: ''
+    title: Override Coordinates
+    optional: true
+    help_text: |
+      Latitude and longitude to compute the sky for, as "51.5074, -0.1278".
+      Leave blank to use the screen's own coordinates.
+  override_timezone:
+    type: string
+    default_value: ''
+    title: Override Timezone
+    optional: true
+    help_text: |
+      Override the timezone with an IANA identifier (e.g. Europe/London, America/New_York).
+      Defaults to the timezone of the screen's coordinates.
+  clock_format:
+    type: string
+    default_value: 24h
+    title: Clock Format
+    optional: true
+    help_text:
+      properties:
+        help_text: |
+          Show times on a 24 hour or 12 hour clock.
+        options:
+          - label: 24 hour (18:44)
+            value: 24h
+          - label: 12 hour (6:44 PM)
+            value: 12h
+        type: select
+      schema_version: 1

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daylight - Screenly Edge App</title>
+    <script src="screenly.js?version=1"></script>
+  </head>
+  <body>
+    <div class="scrim" data-scrim></div>
+    <auto-scaler
+      reference-width="1920"
+      reference-height="1080"
+      orientation="auto"
+      padding="0"
+    >
+      <div id="app">
+        <main class="main">
+          <section class="sky-panel">
+            <header class="place">
+              <div class="place-name">
+                <h1 class="city" data-city>&nbsp;</h1>
+                <p class="place-meta" data-place-meta>&nbsp;</p>
+              </div>
+              <div class="now-block">
+                <div class="clock" data-clock>&nbsp;</div>
+                <div class="date" data-date>&nbsp;</div>
+              </div>
+            </header>
+
+            <p class="headline" data-headline>&nbsp;</p>
+            <p class="subhead" data-subhead>&nbsp;</p>
+
+            <svg
+              class="chart"
+              data-chart
+              viewBox="0 0 1200 460"
+              preserveAspectRatio="xMidYMid meet"
+              aria-hidden="true"
+            ></svg>
+          </section>
+
+          <aside class="moon-panel">
+            <svg
+              class="moon"
+              data-moon
+              viewBox="-130 -130 260 260"
+              aria-hidden="true"
+            ></svg>
+            <div class="moon-summary">
+              <div class="moon-phase" data-moon-phase>&nbsp;</div>
+              <div class="moon-illumination" data-moon-illumination>&nbsp;</div>
+            </div>
+            <dl class="moon-facts" data-moon-facts></dl>
+          </aside>
+        </main>
+
+        <footer class="stats" data-stats></footer>
+      </div>
+    </auto-scaler>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

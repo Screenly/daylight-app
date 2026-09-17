@@ -1,0 +1,120 @@
+/* Development time machine. Loaded only by the dev server. */
+
+.dev-panel {
+  position: fixed;
+  z-index: 10;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(6, 9, 20, 0.82);
+  padding: 12px 16px;
+  color: rgba(255, 255, 255, 0.92);
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 13px;
+  backdrop-filter: blur(12px);
+}
+
+.dev-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.dev-title {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.dev-toggle {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.dev-toggle:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.dev-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Collapsed, it is a small pill in the corner rather than a full-width bar. */
+.dev-panel.is-collapsed {
+  right: 12px;
+  bottom: 12px;
+  left: auto;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.dev-panel.is-collapsed .dev-body {
+  display: none;
+}
+
+.dev-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dev-jumps {
+  flex-wrap: wrap;
+}
+
+.dev-button {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 5px 11px;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.dev-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.dev-button.is-active {
+  border-color: rgba(126, 231, 135, 0.6);
+  background: rgba(126, 231, 135, 0.18);
+}
+
+.dev-date {
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 4px 8px;
+  color: inherit;
+  font: inherit;
+  color-scheme: dark;
+}
+
+.dev-slider {
+  min-width: 120px;
+  flex: 1;
+  accent-color: #7ee787;
+}
+
+.dev-readout {
+  flex: none;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
