@@ -4,7 +4,7 @@
  * over this particular screen.
  */
 
-import { DEG, RAD, signedDegrees } from './astro/index.js'
+import { cosDeg, RAD, sinDeg } from './astro/index.js'
 
 export interface HorizontalPoint {
   altitude: number
@@ -35,17 +35,28 @@ export function litLimbPath(fraction: number, radius: number): string {
 
 /**
  * Degrees to rotate the lit limb clockwise on screen so that it points at the
- * sun, for a viewer facing the moon. Handles both hemispheres without a
- * special case: in the southern sky the sun simply sits on the other side.
+ * sun, for a viewer facing the moon. Handles both hemispheres without a special
+ * case: in the southern sky the sun simply sits on the other side.
+ *
+ * This is the position angle of the sun seen from the moon, measured on the
+ * sphere from the zenith, less the quarter turn that takes the drawn limb from
+ * pointing right to pointing up. Treating the sky as flat around the moon and
+ * using the difference in azimuth instead is close enough while the two are
+ * near each other, but it breaks at opposition: the azimuths are then 180 apart,
+ * which is where the difference wraps, and the disc flips through half a turn
+ * in a minute or two. That is every full moon, twice a day.
  */
 export function brightLimbRotation(
   sun: HorizontalPoint,
   moon: HorizontalPoint,
 ): number {
-  const acrossSky =
-    signedDegrees(sun.azimuth - moon.azimuth) * Math.cos(moon.altitude * DEG)
-  const upSky = sun.altitude - moon.altitude
-  // Screen y grows downward, so a sun that is lower in the sky rotates the
-  // bright limb clockwise.
-  return Math.atan2(-upSky, acrossSky) * RAD
+  const deltaAzimuth = sun.azimuth - moon.azimuth
+  const positionAngle =
+    Math.atan2(
+      cosDeg(sun.altitude) * sinDeg(deltaAzimuth),
+      cosDeg(moon.altitude) * sinDeg(sun.altitude) -
+        sinDeg(moon.altitude) * cosDeg(sun.altitude) * cosDeg(deltaAzimuth),
+    ) * RAD
+
+  return positionAngle - 90
 }

@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'bun:test'
+import { moonPosition, sunPosition } from './astro/index.js'
 import { brightLimbRotation, litLimbPath } from './moon-disc.js'
 
 describe('lit limb path', () => {
@@ -26,16 +27,46 @@ describe('lit limb path', () => {
 })
 
 describe('bright limb rotation', () => {
-  test('sun directly to the right leaves the limb unrotated', () => {
+  test('a sun straight below the moon points the limb straight down', () => {
+    // Same azimuth, so the great circle between them is the vertical circle
+    // and the bearing is exact.
+    expect(
+      brightLimbRotation(
+        { altitude: -30, azimuth: 180 },
+        { altitude: 30, azimuth: 180 },
+      ),
+    ).toBeCloseTo(90, 6)
+  })
+
+  test('a sun straight above the moon points the limb straight up', () => {
+    expect(
+      brightLimbRotation(
+        { altitude: 60, azimuth: 180 },
+        { altitude: 30, azimuth: 180 },
+      ),
+    ).toBeCloseTo(-90, 6)
+  })
+
+  test('a sun to the right points the limb right', () => {
     const rotation = brightLimbRotation(
       { altitude: 20, azimuth: 200 },
       { altitude: 20, azimuth: 180 },
     )
-    expect(rotation).toBeCloseTo(0, 5)
+    // Not exactly zero: two points at equal altitude are joined by a great
+    // circle that bows towards the zenith, so the limb tilts slightly up.
+    expect(rotation).toBeLessThan(0)
+    expect(rotation).toBeGreaterThan(-10)
+  })
+
+  test('a sun to the left points the limb left', () => {
+    const rotation = brightLimbRotation(
+      { altitude: 20, azimuth: 160 },
+      { altitude: 20, azimuth: 180 },
+    )
+    expect(Math.abs(rotation)).toBeGreaterThan(170)
   })
 
   test('evening crescent in the west is lit from below right', () => {
-    // Sun just set to the west-north-west, moon higher and further south.
     const rotation = brightLimbRotation(
       { altitude: -6, azimuth: 288 },
       { altitude: 18, azimuth: 252 },
@@ -44,19 +75,55 @@ describe('bright limb rotation', () => {
     expect(rotation).toBeLessThan(90)
   })
 
-  test('sun on the far side of the moon flips the limb', () => {
+  test('the southern hemisphere is handled without a special case', () => {
+    // Sun above and to the left of the moon: the limb points up and left.
     const rotation = brightLimbRotation(
-      { altitude: 10, azimuth: 90 },
-      { altitude: 10, azimuth: 180 },
+      { altitude: 40, azimuth: 10 },
+      { altitude: 20, azimuth: 30 },
     )
-    expect(Math.abs(rotation)).toBeCloseTo(180, 5)
+    expect(rotation).toBeLessThan(-90)
+  })
+})
+
+describe('the disc does not jump', () => {
+  const SAN_FRANCISCO = { latitude: 37.7749, longitude: -122.4194 }
+
+  /** Largest change in the drawn rotation between consecutive samples. */
+  function largestSwing(from: Date, days: number): { swing: number; at: Date } {
+    const wrap = (degrees: number) =>
+      ((((degrees + 180) % 360) + 360) % 360) - 180
+
+    let previous: number | null = null
+    let worst = { swing: 0, at: from }
+
+    for (let minute = 0; minute <= days * 24 * 60; minute += 2) {
+      const at = new Date(from.getTime() + minute * 60000)
+      const rotation = brightLimbRotation(
+        sunPosition(at, SAN_FRANCISCO.latitude, SAN_FRANCISCO.longitude),
+        moonPosition(at, SAN_FRANCISCO.latitude, SAN_FRANCISCO.longitude),
+      )
+      if (previous !== null) {
+        const swing = Math.abs(wrap(rotation - previous))
+        if (swing > worst.swing) {
+          worst = { swing, at }
+        }
+      }
+      previous = rotation
+    }
+
+    return worst
+  }
+
+  test('through the morning of a full moon, where the sky is opposite itself', () => {
+    // The sun rises in the east as the full moon sets in the west, so their
+    // azimuths pass through 180 degrees apart. Treating the sky as flat turned
+    // the disc through 172 degrees in two minutes here.
+    const worst = largestSwing(new Date('2026-09-26T12:00:00Z'), 2)
+    expect(worst.swing).toBeLessThan(5)
   })
 
-  test('sun below the moon points the limb straight down', () => {
-    const rotation = brightLimbRotation(
-      { altitude: -30, azimuth: 180 },
-      { altitude: 30, azimuth: 180 },
-    )
-    expect(rotation).toBeCloseTo(90, 5)
+  test('across a whole lunation', () => {
+    const worst = largestSwing(new Date('2026-09-01T00:00:00Z'), 30)
+    expect(worst.swing).toBeLessThan(5)
   })
 })
