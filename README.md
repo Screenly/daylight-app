@@ -122,7 +122,7 @@ though it writes 18:44. Whatever it is set to overrides the region.
 `playback` defaults to `live` (the real clock). `auto_play` sweeps through a
 full local day on the player. Dawn, sunrise, noon, sunset, dusk, night, full
 moon, new moon, and the next equinox or solstice freeze the sky at that moment
-— useful for demos and store screenshots. If a frozen moment does not exist for
+— useful for demos and screenshot galleries. If a frozen moment does not exist for
 that location and day (for example sunrise during polar night), the screen
 falls back to live.
 
@@ -149,28 +149,15 @@ picks the date conventions.
 
 ## Screenshots
 
-Player screenshots, one per supported resolution, into `screenshots/`:
+Screenshots for San Francisco at every supported player resolution, into
+`screenshots/` as WebP. Live mode is saved as `{width}x{height}.webp`; each
+frozen `playback` setting is saved as `{mode}-{width}x{height}.webp` (dawn,
+sunrise, noon, sunset, dusk, night, full-moon, new-moon, season). Auto play is
+skipped because it is animated.
 
 ```bash
 bun run screenshots
 ```
 
-Store screenshots, into `store-screenshots/`:
-
-```bash
-bun run screenshots:store
-```
-
-That one picks a US city for each frozen `playback` setting (dawn, sunrise,
-noon, sunset, dusk, night, full moon, new moon, and the next equinox or
-solstice) and freezes a shared reference clock so the app lands on that moment
-the same way a Screenly instance would. Each is shot at 1920×1080 and
-1080×1920. Auto play is skipped because it is animated.
-
-`store-screenshots/scenes.json` records which cities, playback values, and
-instants were used, which gives the store page its captions. Pass a seed to
-reproduce a gallery:
-
-```bash
-STORE_SHOT_SEED=42 bun run screenshots:store
-```
+That runs the Playwright suite, then converts PNGs to WebP with sharp (the
+standard `edge-apps-scripts screenshots` path).
