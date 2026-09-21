@@ -1,7 +1,7 @@
 ---
 syntax: manifest_v1
 description: 'Sunrise, sunset, twilight and moon phase for this screen, computed on the player with no network access'
-icon: https://playground.srly.io/edge-apps/daylight-app/static/img/icon.svg
+icon: https://playground.srly.io/edge-apps/icons/day-light.svg
 author: Screenly, Inc.
 categories:
   - Utilities
@@ -18,7 +18,7 @@ settings:
         type: string
         display_order: 1
         help_text: |
-          Heading text only, e.g. "Dubai" or "Lobby". Does not change the sky.
+          Heading text, e.g. "Dubai" or "Lobby". Does not change the sky.
           Leave blank to use the screen's location.
   override_coordinates:
     type: string
