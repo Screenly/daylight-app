@@ -122,19 +122,19 @@ though it writes 18:44. Whatever it is set to overrides the region.
 `playback` controls whether the screen follows the real clock or freezes at a
 named sky moment:
 
-| Value        | What it shows                                              |
-| ------------ | ---------------------------------------------------------- |
-| `live`       | Real clock (default)                                       |
-| `auto_play`  | Animates through a full local day, then keeps looping      |
-| `dawn`       | Civil dawn (sun 6° below the horizon, first light)         |
-| `sunrise`    | Sunrise                                                    |
-| `noon`       | Solar noon                                                 |
-| `sunset`     | Sunset                                                     |
-| `dusk`       | Civil dusk (sun 6° below the horizon, after sunset)        |
-| `night`      | Astronomical dusk (sun 18° below the horizon, full night)  |
-| `full_moon`  | Next full moon                                             |
-| `new_moon`   | Next new moon                                              |
-| `season`     | Next equinox or solstice                                   |
+| Value       | What it shows                                             |
+| ----------- | --------------------------------------------------------- |
+| `live`      | Real clock (default)                                      |
+| `auto_play` | Animates through a full local day, then keeps looping     |
+| `dawn`      | Civil dawn (sun 6° below the horizon, first light)        |
+| `sunrise`   | Sunrise                                                   |
+| `noon`      | Solar noon                                                |
+| `sunset`    | Sunset                                                    |
+| `dusk`      | Civil dusk (sun 6° below the horizon, after sunset)       |
+| `night`     | Astronomical dusk (sun 18° below the horizon, full night) |
+| `full_moon` | Next full moon                                            |
+| `new_moon`  | Next new moon                                             |
+| `season`    | Next equinox or solstice                                  |
 
 If a frozen moment does not exist for that location and day (for example
 sunrise during polar night), the screen falls back to live.
