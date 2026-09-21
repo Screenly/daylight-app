@@ -1,5 +1,7 @@
 # Daylight
 
+![Screenshot](/screenshots/live-1920x1080.webp)
+
 The sun and moon over this screen, worked out on the player itself. It needs no
 API key and makes no network calls; the whole app is arithmetic on the clock and
 the screen's coordinates.
