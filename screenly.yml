@@ -46,3 +46,38 @@ settings:
             value: 12h
         type: select
       schema_version: 1
+  playback:
+    type: string
+    default_value: live
+    title: Playback
+    optional: true
+    help_text:
+      properties:
+        help_text: |
+          Live follows the real clock. Auto play sweeps through a full day.
+          Other options freeze the sky at that moment.
+        options:
+          - label: Live
+            value: live
+          - label: Auto play
+            value: auto_play
+          - label: Dawn
+            value: dawn
+          - label: Sunrise
+            value: sunrise
+          - label: Noon
+            value: noon
+          - label: Sunset
+            value: sunset
+          - label: Dusk
+            value: dusk
+          - label: Night
+            value: night
+          - label: Full moon
+            value: full_moon
+          - label: New moon
+            value: new_moon
+          - label: Next equinox / solstice
+            value: season
+        type: select
+      schema_version: 1

@@ -7,11 +7,8 @@ import {
 } from '@screenly/edge-apps'
 
 import { LANDSCAPE_HEIGHT, PORTRAIT_HEIGHT } from './chart.js'
-import { isClockOverridden, now, setClockOverride } from './clock.js'
-import type { DevPanel } from './dev-panel.js'
-
+import { now } from './clock.js'
 import { formatClock, formatLongDate } from './format.js'
-
 import {
   applySky,
   CITY_SIZE,
@@ -25,10 +22,9 @@ import {
   renderStats,
   subheadText,
 } from './panels.js'
+import { applyPlayback, resolvePlaybackMode } from './playback.js'
 import { resolvePlace, type Place } from './place.js'
 import { buildSkyModel } from './view-model.js'
-
-let devPanel: DevPanel | undefined
 
 /**
  * Portrait when the viewport is taller than it is wide, the same test
@@ -71,8 +67,6 @@ function render(place: Place): void {
   const headingSize = portrait ? CITY_SIZE.portrait : CITY_SIZE.landscape
   fitDynamicText(headingSize)
   requestAnimationFrame(() => fitDynamicText(headingSize))
-
-  devPanel?.update(model, !isClockOverridden())
 }
 
 /**
@@ -95,20 +89,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   try {
     const place = resolvePlace()
+    const playback = resolvePlaybackMode()
 
-    if (import.meta.env.DEV) {
-      const { mountDevPanel } = await import('./dev-panel.js')
-      devPanel = mountDevPanel({
-        place,
-        onChange: (instant) => {
-          setClockOverride(instant)
-          render(place)
-        },
-      })
+    applyPlayback(place, () => render(place))
+
+    if (playback !== 'auto_play') {
+      render(place)
     }
 
-    render(place)
-    scheduleMinuteTicks(place)
+    if (playback === 'live') {
+      scheduleMinuteTicks(place)
+    }
 
     // Orientation changes swap the layout, the chart shape and the type sizes.
     let resizeTimer: number | undefined

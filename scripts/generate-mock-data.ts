@@ -27,6 +27,7 @@ metadata:
     - Development
 settings:
   clock_format: 12h
+  playback: live
 `
 
 const force = process.argv.includes('--force')

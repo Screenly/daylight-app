@@ -53,14 +53,6 @@ bun run generate-mock-data
 bun run generate-mock-data -- --force
 ```
 
-The dev server mounts a time machine along the bottom of the screen: a date
-field, a slider across the local day, a play button that sweeps a whole day in
-about thirty seconds, and jumps to dawn, sunrise, sunset, night, the next full
-or new moon and the next equinox or solstice. It is the quickest way to see
-every state the screen can reach, including ones months away. Hide collapses it
-to a pill in the corner when it is in the way, and the choice is remembered. It
-is loaded behind `import.meta.env.DEV` and is absent from a production build.
-
 Edit `mock-data.yml` to move the screen somewhere else while developing:
 
 ```yaml
@@ -115,6 +107,7 @@ runs once by hand to create the app in an environment.
 | `override_coordinates` | Latitude and longitude as `51.5074, -0.1278`   | No       | Screen's own metadata |
 | `override_timezone`    | IANA timezone identifier, e.g. `Europe/London` | No       | From coordinates      |
 | `clock_format`         | `24h` or `12h`                                 | No       | `24h`                 |
+| `playback`             | `live`, `auto_play`, or a frozen sky moment    | No       | `live`                |
 
 The interface is English on every screen, but it writes dates the way the
 screen's own region does. The timezone gives a country through the tz database's
@@ -125,6 +118,13 @@ An unrecognised timezone falls back to world English, which puts the day first.
 `clock_format` is separate and explicit, because a region's preference is a poor
 guide to what a particular screen wants: CLDR has Argentina on a 12 hour clock
 though it writes 18:44. Whatever it is set to overrides the region.
+
+`playback` defaults to `live` (the real clock). `auto_play` sweeps through a
+full local day on the player. Dawn, sunrise, noon, sunset, dusk, night, full
+moon, new moon, and the next equinox or solstice freeze the sky at that moment
+— useful for demos and store screenshots. If a frozen moment does not exist for
+that location and day (for example sunrise during polar night), the screen
+falls back to live.
 
 A screen's `location` is free text. IP geolocation writes it as "City, Country",
 but a user who picks an address in screen settings gets Google's formatted
