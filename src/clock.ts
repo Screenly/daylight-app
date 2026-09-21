@@ -1,9 +1,8 @@
 /**
  * The instant the screen is drawing.
  *
- * In production this is simply the system clock. The development time machine
- * overrides it so every state of the sky (dawn, golden hour, a polar night, a
- * full moon) can be reached without waiting for it.
+ * Normally this is the system clock. The `playback` setting can freeze it at a
+ * named sky moment or advance it while auto-playing through the day.
  */
 
 let override: Date | null = null

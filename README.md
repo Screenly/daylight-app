@@ -53,14 +53,6 @@ bun run generate-mock-data
 bun run generate-mock-data -- --force
 ```
 
-The dev server mounts a time machine along the bottom of the screen: a date
-field, a slider across the local day, a play button that sweeps a whole day in
-about thirty seconds, and jumps to dawn, sunrise, sunset, night, the next full
-or new moon and the next equinox or solstice. It is the quickest way to see
-every state the screen can reach, including ones months away. Hide collapses it
-to a pill in the corner when it is in the way, and the choice is remembered. It
-is loaded behind `import.meta.env.DEV` and is absent from a production build.
-
 Edit `mock-data.yml` to move the screen somewhere else while developing:
 
 ```yaml
@@ -111,10 +103,11 @@ runs once by hand to create the app in an environment.
 
 | Setting                | Description                                    | Required | Default               |
 | ---------------------- | ---------------------------------------------- | -------- | --------------------- |
-| `location_name`        | Heading text, e.g. `Dubai` or `Lobby`          | No       | Screen's own location |
+| `location_name`        | Heading text only                              | No       | Screen's own location |
 | `override_coordinates` | Latitude and longitude as `51.5074, -0.1278`   | No       | Screen's own metadata |
 | `override_timezone`    | IANA timezone identifier, e.g. `Europe/London` | No       | From coordinates      |
 | `clock_format`         | `24h` or `12h`                                 | No       | `24h`                 |
+| `playback`             | `live`, `auto_play`, or a frozen sky moment    | No       | `live`                |
 
 The interface is English on every screen, but it writes dates the way the
 screen's own region does. The timezone gives a country through the tz database's
@@ -125,6 +118,26 @@ An unrecognised timezone falls back to world English, which puts the day first.
 `clock_format` is separate and explicit, because a region's preference is a poor
 guide to what a particular screen wants: CLDR has Argentina on a 12 hour clock
 though it writes 18:44. Whatever it is set to overrides the region.
+
+`playback` controls whether the screen follows the real clock or freezes at a
+named sky moment:
+
+| Value       | What it shows                                             |
+| ----------- | --------------------------------------------------------- |
+| `live`      | Real clock (default)                                      |
+| `auto_play` | Animates through a full local day, then keeps looping     |
+| `dawn`      | Civil dawn (sun 6° below the horizon, first light)        |
+| `sunrise`   | Sunrise                                                   |
+| `noon`      | Solar noon                                                |
+| `sunset`    | Sunset                                                    |
+| `dusk`      | Civil dusk (sun 6° below the horizon, after sunset)       |
+| `night`     | Astronomical dusk (sun 18° below the horizon, full night) |
+| `full_moon` | Next full moon                                            |
+| `new_moon`  | Next new moon                                             |
+| `season`    | Next equinox or solstice                                  |
+
+If a frozen moment does not exist for that location and day (for example
+sunrise during polar night), the screen falls back to live.
 
 A screen's `location` is free text. IP geolocation writes it as "City, Country",
 but a user who picks an address in screen settings gets Google's formatted
@@ -149,28 +162,16 @@ picks the date conventions.
 
 ## Screenshots
 
-Player screenshots, one per supported resolution, into `screenshots/`:
+Screenshots for San Francisco into `screenshots/` as WebP. Live mode covers
+every supported player resolution as `live-{width}x{height}.webp`. Each frozen
+`playback` setting is shot only at 1080p landscape and portrait
+(`{mode}-1920x1080.webp` and `{mode}-1080x1920.webp`: dawn, sunrise, noon,
+sunset, dusk, night, full-moon, new-moon, season). Auto play is skipped because
+it is animated.
 
 ```bash
 bun run screenshots
 ```
 
-Store screenshots, into `store-screenshots/`:
-
-```bash
-bun run screenshots:store
-```
-
-That one picks five US cities at random and freezes the clock at a different
-moment in each, so the gallery shows the app in five states rather than five
-copies of the same afternoon: first light, solar noon, golden hour, civil
-twilight and a full moon at night. Each is shot at 1920x1080 and 1080x1920.
-
-The instants come from the app's own astronomy, so a full moon shot lands on a
-real full moon. `store-screenshots/scenes.json` records which cities and
-instants were used, which gives the store page its captions. Pass a seed to
-reproduce a gallery:
-
-```bash
-STORE_SHOT_SEED=42 bun run screenshots:store
-```
+That runs the Playwright suite, then converts PNGs to WebP with sharp (the
+standard `edge-apps-scripts screenshots` path).

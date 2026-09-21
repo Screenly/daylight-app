@@ -1,6 +1,7 @@
 ---
 syntax: manifest_v1
 description: 'Sunrise, sunset, twilight and moon phase for this screen, computed on the player with no network access'
+icon: https://playground.srly.io/edge-apps/icons/day-light.svg
 author: Screenly, Inc.
 categories:
   - Utilities
@@ -11,32 +12,53 @@ settings:
     default_value: ''
     title: Location Name
     optional: true
-    help_text: |
-      Name shown as the heading, e.g. "Dubai" or "Lobby". Defaults to the
-      screen's own location field, and is left out entirely when neither is set.
+    help_text:
+      schema_version: 1
+      properties:
+        type: string
+        display_order: 1
+        help_text: |
+          Heading text, e.g. "Dubai" or "Lobby". Does not change the sky.
+          Leave blank to use the screen's location.
   override_coordinates:
     type: string
     default_value: ''
     title: Override Coordinates
     optional: true
-    help_text: |
-      Latitude and longitude to compute the sky for, as "51.5074, -0.1278".
-      Leave blank to use the screen's own coordinates.
+    help_text:
+      schema_version: 1
+      properties:
+        type: string
+        advanced: true
+        display_order: 1
+        help_text: |
+          Latitude and longitude to compute the sky for, as "51.5074, -0.1278".
+          Leave blank to use the screen's own coordinates.
   override_timezone:
     type: string
     default_value: ''
     title: Override Timezone
     optional: true
-    help_text: |
-      Override the timezone with an IANA identifier (e.g. Europe/London, America/New_York).
-      Defaults to the timezone of the screen's coordinates.
+    help_text:
+      schema_version: 1
+      properties:
+        type: string
+        advanced: true
+        display_order: 2
+        help_text: |
+          Override the timezone with an IANA identifier (e.g. Europe/London, America/New_York).
+          Defaults to the timezone of the screen's coordinates.
   clock_format:
     type: string
     default_value: 24h
     title: Clock Format
     optional: true
     help_text:
+      schema_version: 1
       properties:
+        type: select
+        advanced: true
+        display_order: 3
         help_text: |
           Show times on a 24 hour or 12 hour clock.
         options:
@@ -44,5 +66,39 @@ settings:
             value: 24h
           - label: 12 hour (6:44 PM)
             value: 12h
-        type: select
+  playback:
+    type: string
+    default_value: live
+    title: Playback
+    optional: true
+    help_text:
       schema_version: 1
+      properties:
+        type: select
+        display_order: 2
+        help_text: |
+          Live follows the real clock. Auto play sweeps through a full day.
+          Other options freeze the sky at that moment.
+        options:
+          - label: Live
+            value: live
+          - label: Auto play
+            value: auto_play
+          - label: Dawn
+            value: dawn
+          - label: Sunrise
+            value: sunrise
+          - label: Noon
+            value: noon
+          - label: Sunset
+            value: sunset
+          - label: Dusk
+            value: dusk
+          - label: Night
+            value: night
+          - label: Full moon
+            value: full_moon
+          - label: New moon
+            value: new_moon
+          - label: Next equinox / solstice
+            value: season

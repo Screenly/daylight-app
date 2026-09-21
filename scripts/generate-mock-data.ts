@@ -27,6 +27,8 @@ metadata:
     - Development
 settings:
   clock_format: 12h
+  location_name: San Francisco
+  playback: live
 `
 
 const force = process.argv.includes('--force')
