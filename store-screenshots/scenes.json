@@ -1,0 +1,71 @@
+{
+  "seed": 0,
+  "generated": "2026-09-17T14:28:48.026Z",
+  "scenes": [
+    {
+      "order": 1,
+      "state": "dawn",
+      "caption": "First light, before sunrise",
+      "city": "Nashville, TN",
+      "timeZone": "America/Chicago",
+      "localTime": "Sep 17, 2026, 6:18 AM",
+      "instant": "2026-09-17T11:18:35.707Z",
+      "files": [
+        "01-dawn-landscape.png",
+        "01-dawn-portrait.png"
+      ]
+    },
+    {
+      "order": 2,
+      "state": "midday",
+      "caption": "Solar noon, the sun at its highest",
+      "city": "Miami, FL",
+      "timeZone": "America/New_York",
+      "localTime": "Sep 17, 2026, 1:15 PM",
+      "instant": "2026-09-17T17:15:12.355Z",
+      "files": [
+        "02-midday-landscape.png",
+        "02-midday-portrait.png"
+      ]
+    },
+    {
+      "order": 3,
+      "state": "golden-hour",
+      "caption": "Golden hour",
+      "city": "Denver, CO",
+      "timeZone": "America/Denver",
+      "localTime": "Sep 17, 2026, 6:47 PM",
+      "instant": "2026-09-18T00:47:40.231Z",
+      "files": [
+        "03-golden-hour-landscape.png",
+        "03-golden-hour-portrait.png"
+      ]
+    },
+    {
+      "order": 4,
+      "state": "dusk",
+      "caption": "Civil twilight, after sunset",
+      "city": "Boston, MA",
+      "timeZone": "America/New_York",
+      "localTime": "Sep 17, 2026, 7:04 PM",
+      "instant": "2026-09-17T23:04:47.142Z",
+      "files": [
+        "04-dusk-landscape.png",
+        "04-dusk-portrait.png"
+      ]
+    },
+    {
+      "order": 5,
+      "state": "full-moon",
+      "caption": "A full moon, late evening",
+      "city": "New York, NY",
+      "timeZone": "America/New_York",
+      "localTime": "Sep 26, 2026, 10:00 PM",
+      "instant": "2026-09-27T02:00:00.000Z",
+      "files": [
+        "05-full-moon-landscape.png",
+        "05-full-moon-portrait.png"
+      ]
+    }
+  ]
+}
