@@ -149,11 +149,12 @@ picks the date conventions.
 
 ## Screenshots
 
-Screenshots for San Francisco at every supported player resolution, into
-`screenshots/` as WebP. Live mode is saved as `{width}x{height}.webp`; each
-frozen `playback` setting is saved as `{mode}-{width}x{height}.webp` (dawn,
-sunrise, noon, sunset, dusk, night, full-moon, new-moon, season). Auto play is
-skipped because it is animated.
+Screenshots for San Francisco into `screenshots/` as WebP. Live mode covers
+every supported player resolution as `{width}x{height}.webp`. Each frozen
+`playback` setting is shot only at 1080p landscape and portrait
+(`{mode}-1920x1080.webp` and `{mode}-1080x1920.webp`: dawn, sunrise, noon,
+sunset, dusk, night, full-moon, new-moon, season). Auto play is skipped because
+it is animated.
 
 ```bash
 bun run screenshots

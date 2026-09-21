@@ -65,7 +65,11 @@ for (const scene of scenes) {
 
   const fileStem = scene.name.replaceAll('_', '-')
 
-  for (const { width, height } of RESOLUTIONS) {
+  // Playback states only need 1080p landscape and portrait.
+  for (const { width, height } of [
+    { width: 1920, height: 1080 },
+    { width: 1080, height: 1920 },
+  ] as const) {
     test(`screenshot ${scene.name} ${width}x${height}`, async ({ browser }) => {
       const screenshotsDir = getScreenshotsDir()
       const context = await browser.newContext({ viewport: { width, height } })
