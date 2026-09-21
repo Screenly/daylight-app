@@ -103,7 +103,7 @@ runs once by hand to create the app in an environment.
 
 | Setting                | Description                                    | Required | Default               |
 | ---------------------- | ---------------------------------------------- | -------- | --------------------- |
-| `location_name`        | Heading text, e.g. `Dubai` or `Lobby`          | No       | Screen's own location |
+| `location_name`        | Heading text only                              | No       | Screen's own location |
 | `override_coordinates` | Latitude and longitude as `51.5074, -0.1278`   | No       | Screen's own metadata |
 | `override_timezone`    | IANA timezone identifier, e.g. `Europe/London` | No       | From coordinates      |
 | `clock_format`         | `24h` or `12h`                                 | No       | `24h`                 |
@@ -119,12 +119,25 @@ An unrecognised timezone falls back to world English, which puts the day first.
 guide to what a particular screen wants: CLDR has Argentina on a 12 hour clock
 though it writes 18:44. Whatever it is set to overrides the region.
 
-`playback` defaults to `live` (the real clock). `auto_play` sweeps through a
-full local day on the player. Dawn, sunrise, noon, sunset, dusk, night, full
-moon, new moon, and the next equinox or solstice freeze the sky at that moment
-— useful for demos and screenshot galleries. If a frozen moment does not exist for
-that location and day (for example sunrise during polar night), the screen
-falls back to live.
+`playback` controls whether the screen follows the real clock or freezes at a
+named sky moment:
+
+| Value        | What it shows                                              |
+| ------------ | ---------------------------------------------------------- |
+| `live`       | Real clock (default)                                       |
+| `auto_play`  | Animates through a full local day, then keeps looping      |
+| `dawn`       | Civil dawn (sun 6° below the horizon, first light)         |
+| `sunrise`    | Sunrise                                                    |
+| `noon`       | Solar noon                                                 |
+| `sunset`     | Sunset                                                     |
+| `dusk`       | Civil dusk (sun 6° below the horizon, after sunset)        |
+| `night`      | Astronomical dusk (sun 18° below the horizon, full night)  |
+| `full_moon`  | Next full moon                                             |
+| `new_moon`   | Next new moon                                              |
+| `season`     | Next equinox or solstice                                   |
+
+If a frozen moment does not exist for that location and day (for example
+sunrise during polar night), the screen falls back to live.
 
 A screen's `location` is free text. IP geolocation writes it as "City, Country",
 but a user who picks an address in screen settings gets Google's formatted
