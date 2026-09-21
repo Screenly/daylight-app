@@ -40,6 +40,7 @@ test.beforeAll(() => {
         scenes: scenes.map((scene, index) => ({
           order: index + 1,
           state: scene.name,
+          playback: scene.playback,
           caption: scene.caption,
           city: scene.city.name,
           timeZone: scene.timeZone,
@@ -61,7 +62,7 @@ test.beforeAll(() => {
 })
 
 function fileStem(index: number, scene: Scene): string {
-  return `${String(index + 1).padStart(2, '0')}-${scene.name}`
+  return `${String(index + 1).padStart(2, '0')}-${scene.name.replaceAll('_', '-')}`
 }
 
 scenes.forEach((scene, index) => {
@@ -76,7 +77,7 @@ scenes.forEach((scene, index) => {
           location: scene.city.name,
           screen_name: scene.city.name,
         },
-        { clock_format: '12h' },
+        { clock_format: '12h', playback: scene.playback },
       )
 
       const context = await browser.newContext({
@@ -85,7 +86,8 @@ scenes.forEach((scene, index) => {
       })
       const page = await context.newPage()
 
-      await setupClockMock(page, scene.instant)
+      // Freeze "now" so playback moments resolve from a stable local day.
+      await setupClockMock(page, scene.reference)
       await setupScreenlyJsMock(page, screenlyJsContent)
 
       await page.goto('/')
@@ -94,7 +96,10 @@ scenes.forEach((scene, index) => {
       await page.waitForTimeout(300)
 
       await page.screenshot({
-        path: path.join(OUTPUT_DIR, `${fileStem(index, scene)}-${size.label}.png`),
+        path: path.join(
+          OUTPUT_DIR,
+          `${fileStem(index, scene)}-${size.label}.png`,
+        ),
         fullPage: false,
       })
 

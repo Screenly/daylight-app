@@ -161,13 +161,13 @@ Store screenshots, into `store-screenshots/`:
 bun run screenshots:store
 ```
 
-That one picks five US cities at random and freezes the clock at a different
-moment in each, so the gallery shows the app in five states rather than five
-copies of the same afternoon: first light, solar noon, golden hour, civil
-twilight and a full moon at night. Each is shot at 1920x1080 and 1080x1920.
+That one picks a US city for each frozen `playback` setting (dawn, sunrise,
+noon, sunset, dusk, night, full moon, new moon, and the next equinox or
+solstice) and freezes a shared reference clock so the app lands on that moment
+the same way a Screenly instance would. Each is shot at 1920×1080 and
+1080×1920. Auto play is skipped because it is animated.
 
-The instants come from the app's own astronomy, so a full moon shot lands on a
-real full moon. `store-screenshots/scenes.json` records which cities and
+`store-screenshots/scenes.json` records which cities, playback values, and
 instants were used, which gives the store page its captions. Pass a seed to
 reproduce a gallery:
 

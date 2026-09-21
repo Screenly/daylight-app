@@ -19,9 +19,16 @@ export const MOMENT_MODES = [
 
 export type MomentMode = (typeof MOMENT_MODES)[number]
 
-/** Instant for a frozen moment, or null when that event does not exist today. */
-export function instantForMoment(mode: MomentMode, place: Place): Date | null {
-  const model = buildSkyModel(new Date(), place)
+/**
+ * Instant for a frozen moment, or null when that event does not exist for the
+ * local day containing `at` (defaults to now).
+ */
+export function instantForMoment(
+  mode: MomentMode,
+  place: Place,
+  at: Date = new Date(),
+): Date | null {
+  const model = buildSkyModel(at, place)
 
   switch (mode) {
     case 'dawn':

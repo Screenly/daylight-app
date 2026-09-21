@@ -1,20 +1,20 @@
 /**
- * Scenes for the store screenshots: five US cities, each frozen at a moment
- * that shows the app in a different state.
+ * Scenes for the store screenshots: one US city per `playback` setting moment,
+ * so the gallery shows what each setting looks like on a screen.
  *
- * The cities are drawn at random from a pool so the gallery is not always the
- * same five, and the instants are computed from the app's own astronomy, so
- * every shot lands on a real dawn or a real full moon rather than a clock time
- * that happens to look about right.
+ * Cities are drawn at random from a pool so the gallery is not always the same
+ * set. The clock is frozen to a fixed reference day; the app's `playback`
+ * setting then jumps to that day's dawn, sunrise, and so on.
  */
 
+import { FIXED_SCREENSHOT_DATE } from '@screenly/edge-apps/test/screenshots'
+
 import {
-  moonIllumination,
-  nextMoonPhase,
-  sunEvents,
-  type SunEvents,
-} from '../src/astro/index.js'
-import { instantFromZoned, utcDateOfLocalNoon, zonedParts } from '../src/timezone.js'
+  instantForMoment,
+  MOMENT_MODES,
+  type MomentMode,
+} from '../src/playback-moments.js'
+import type { Place } from '../src/place.js'
 
 export interface City {
   name: string
@@ -41,21 +41,20 @@ export const US_CITIES: City[] = [
   { name: 'Seattle, WA', latitude: 47.6062, longitude: -122.3321 },
 ]
 
-/** The states worth showing, in the order they read best in a gallery. */
-export const SCENE_NAMES = [
-  'dawn',
-  'midday',
-  'golden-hour',
-  'dusk',
-  'full-moon',
-] as const
+/** Frozen `playback` values, in the order they read best in a gallery. */
+export const SCENE_NAMES = MOMENT_MODES
 
-export type SceneName = (typeof SCENE_NAMES)[number]
+export type SceneName = MomentMode
 
 export interface Scene {
   name: SceneName
+  /** Value passed as the Screenly `playback` setting. */
+  playback: MomentMode
   city: City
   timeZone: string
+  /** Clock freeze before the app applies `playback`. */
+  reference: Date
+  /** Instant the setting should land on, for captions. */
   instant: Date
   caption: string
 }
@@ -76,73 +75,42 @@ function shuffle<T>(items: T[], seed: number): T[] {
   return copy
 }
 
-function eventsFor(city: City, day: Date, timeZone: string): SunEvents {
-  return sunEvents(
-    utcDateOfLocalNoon(day, timeZone, city.longitude),
-    city.latitude,
-    city.longitude,
-  )
-}
-
-/** Local clock time on the day of an instant, as an absolute instant. */
-function atLocalHour(instant: Date, timeZone: string, hour: number): Date {
-  return instantFromZoned(zonedParts(instant, timeZone), hour, timeZone)
-}
-
-function instantFor(
-  scene: SceneName,
-  city: City,
-  timeZone: string,
-  reference: Date,
-): Date {
-  const events = eventsFor(city, reference, timeZone)
-
-  switch (scene) {
-    case 'dawn':
-      // Between first light and sunrise, where the dawn palette is strongest.
-      return midpoint(events.civilDawn, events.sunrise, reference)
-    case 'midday':
-      return events.solarNoon
-    case 'golden-hour':
-      return midpoint(events.goldenHourStart, events.sunset, reference)
-    case 'dusk':
-      return midpoint(events.sunset, events.civilDusk, reference)
-    case 'full-moon': {
-      // Late evening on the night the moon is full, so the disc is lit and the
-      // sky is dark enough to show the night palette.
-      const full = nextMoonPhase(reference, 180)
-      const night = atLocalHour(full, timeZone, 22)
-      return moonIllumination(night).fraction > 0.985 ? night : full
-    }
-  }
-}
-
-function midpoint(a: Date | null, b: Date | null, fallback: Date): Date {
-  if (!a || !b) {
-    return fallback
-  }
-  return new Date((a.getTime() + b.getTime()) / 2)
-}
-
 const CAPTIONS: Record<SceneName, string> = {
-  dawn: 'First light, before sunrise',
-  midday: 'Solar noon, the sun at its highest',
-  'golden-hour': 'Golden hour',
-  dusk: 'Civil twilight, after sunset',
-  'full-moon': 'A full moon, late evening',
+  dawn: 'Playback: dawn (civil twilight)',
+  sunrise: 'Playback: sunrise',
+  noon: 'Playback: solar noon',
+  sunset: 'Playback: sunset',
+  dusk: 'Playback: dusk (civil twilight)',
+  night: 'Playback: night (astronomical dusk)',
+  full_moon: 'Playback: next full moon',
+  new_moon: 'Playback: next new moon',
+  season: 'Playback: next equinox or solstice',
+}
+
+function placeFor(city: City, timeZone: string): Place {
+  return {
+    latitude: city.latitude,
+    longitude: city.longitude,
+    timeZone,
+    locale: 'en-US',
+    hour12: true,
+    name: city.name,
+    unlocated: false,
+  }
 }
 
 export interface SceneOptions {
   /** Timezone lookup, which the spec supplies from the app's own resolver. */
   timeZoneFor: (city: City) => string
+  /** Shared clock freeze; defaults to the screenshot suite's fixed date. */
   reference?: Date
   seed?: number
 }
 
-/** One scene per state, each in a different randomly chosen city. */
+/** One scene per playback moment, each in a different randomly chosen city. */
 export function buildScenes({
   timeZoneFor,
-  reference = new Date(),
+  reference = FIXED_SCREENSHOT_DATE,
   seed = 0,
 }: SceneOptions): Scene[] {
   const cities = shuffle(US_CITIES, seed).slice(0, SCENE_NAMES.length)
@@ -150,11 +118,16 @@ export function buildScenes({
   return SCENE_NAMES.map((name, index) => {
     const city = cities[index]!
     const timeZone = timeZoneFor(city)
+    const instant =
+      instantForMoment(name, placeFor(city, timeZone), reference) ?? reference
+
     return {
       name,
+      playback: name,
       city,
       timeZone,
-      instant: instantFor(name, city, timeZone, reference),
+      reference,
+      instant,
       caption: CAPTIONS[name],
     }
   })
