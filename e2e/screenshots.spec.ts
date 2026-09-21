@@ -48,7 +48,7 @@ for (const { width, height } of RESOLUTIONS) {
     await page.waitForTimeout(300)
 
     await page.screenshot({
-      path: path.join(screenshotsDir, `${width}x${height}.png`),
+      path: path.join(screenshotsDir, `live-${width}x${height}.png`),
       fullPage: false,
     })
 

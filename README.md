@@ -150,7 +150,7 @@ picks the date conventions.
 ## Screenshots
 
 Screenshots for San Francisco into `screenshots/` as WebP. Live mode covers
-every supported player resolution as `{width}x{height}.webp`. Each frozen
+every supported player resolution as `live-{width}x{height}.webp`. Each frozen
 `playback` setting is shot only at 1080p landscape and portrait
 (`{mode}-1920x1080.webp` and `{mode}-1080x1920.webp`: dawn, sunrise, noon,
 sunset, dusk, night, full-moon, new-moon, season). Auto play is skipped because
