@@ -1,6 +1,7 @@
 ---
 syntax: manifest_v1
 description: 'Sunrise, sunset, twilight and moon phase for this screen, computed on the player with no network access'
+icon: https://playground.srly.io/edge-apps/daylight-app/static/img/icon.svg
 author: Screenly, Inc.
 categories:
   - Utilities
