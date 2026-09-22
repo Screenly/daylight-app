@@ -1,0 +1,426 @@
+@layer theme, base, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import '@screenly/edge-apps/styles' layer(base);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@layer base {
+  :root {
+    --sky-zenith: rgb(10, 15, 36);
+    --sky-horizon: rgb(22, 24, 58);
+    --sky-glow: rgb(116, 132, 190);
+    --sky-scrim: 0.1;
+
+    --ink: rgba(255, 255, 255, 0.96);
+    --ink-muted: rgba(255, 255, 255, 0.62);
+    --ink-faint: rgba(255, 255, 255, 0.4);
+    --rule: rgba(255, 255, 255, 0.13);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    background: linear-gradient(
+      180deg,
+      var(--sky-zenith) 0%,
+      var(--sky-horizon) 100%
+    );
+  }
+
+  .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: rgb(3 6 16 / var(--sky-scrim));
+  }
+
+  auto-scaler {
+    z-index: 1;
+  }
+
+  #app {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  /* Flat regions divided by hairlines, edge to edge. */
+  .main {
+    display: grid;
+    min-height: 0;
+    flex: 1;
+    grid-template-columns: 1fr 520px;
+  }
+
+  /* Sun path panel */
+
+  .sky-panel {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    padding: 56px 64px 28px;
+  }
+
+  .place {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 48px;
+  }
+
+  .place-name {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .now-block {
+    flex: none;
+    text-align: right;
+  }
+
+  .clock {
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+
+  .date {
+    margin-top: 6px;
+    color: var(--ink-muted);
+    font-size: 25px;
+  }
+
+  /*
+   * One line, always the same height: a long heading is scaled down to fit.
+   * Block rather than flex, so the box reports the text's real width and the
+   * fitting code can see the overflow it needs to correct.
+   */
+  .city {
+    height: 68px;
+    margin: 0;
+    overflow: hidden;
+    font-size: 64px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 68px;
+    white-space: nowrap;
+  }
+
+  .place-meta {
+    margin: 8px 0 0;
+    color: var(--ink-muted);
+    font-size: 25px;
+  }
+
+  .headline {
+    margin: 24px 0 0;
+    font-size: 50px;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .subhead {
+    margin: 8px 0 0;
+    color: var(--ink-muted);
+    font-size: 27px;
+  }
+
+  .chart {
+    width: 100%;
+    height: auto;
+    max-height: 100%;
+    min-height: 0;
+    margin-block: auto;
+    overflow: visible;
+  }
+
+  .chart-gridline {
+    stroke: rgba(255, 255, 255, 0.09);
+    stroke-width: 1;
+  }
+
+  .chart-horizon {
+    stroke: rgba(255, 255, 255, 0.5);
+    stroke-width: 2;
+  }
+
+  .chart-horizon-label,
+  .chart-axis-label,
+  .chart-event-label {
+    fill: var(--ink-muted);
+    font-size: 21px;
+    letter-spacing: 0.04em;
+  }
+
+  .chart-horizon-label {
+    font-size: 19px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  .chart-event-label {
+    fill: rgba(255, 255, 255, 0.82);
+  }
+
+  .sun-path-line {
+    fill: none;
+    stroke: var(--sky-glow);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .sun-path-fill {
+    fill: var(--sky-glow);
+    opacity: 0.18;
+  }
+
+  .chart-event-dot {
+    fill: rgba(255, 255, 255, 0.85);
+  }
+
+  .chart-now-line {
+    stroke: rgba(255, 255, 255, 0.3);
+    stroke-width: 2;
+    stroke-dasharray: 3 9;
+    stroke-linecap: round;
+  }
+
+  .chart-sun {
+    fill: var(--sky-glow);
+    stroke: rgba(255, 255, 255, 0.75);
+    stroke-width: 3;
+  }
+
+  .chart-sun-halo {
+    fill: var(--sky-glow);
+    opacity: 0.24;
+  }
+
+  /* Moon panel */
+
+  .moon-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-left: 1px solid var(--rule);
+    padding: 48px 56px;
+    text-align: center;
+  }
+
+  .moon {
+    width: 272px;
+    height: 272px;
+    flex: none;
+  }
+
+  /* Dark enough that the crescent reads against a bright evening sky. */
+  .moon-dark {
+    fill: rgba(10, 16, 38, 0.32);
+  }
+
+  .moon-lit {
+    fill: #f4f1e6;
+  }
+
+  .moon-crater {
+    fill: rgba(96, 96, 112, 0.16);
+  }
+
+  .moon-rim {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.22);
+    stroke-width: 1.5;
+  }
+
+  .moon-phase {
+    margin-top: 22px;
+    font-size: 40px;
+    font-weight: 600;
+  }
+
+  .moon-illumination {
+    margin-top: 6px;
+    color: var(--ink-muted);
+    font-size: 26px;
+  }
+
+  .moon-facts {
+    display: grid;
+    width: 100%;
+    margin: 30px 0 0;
+    gap: 16px;
+  }
+
+  .moon-fact {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 16px;
+  }
+
+  .moon-fact dt {
+    color: var(--ink-muted);
+    font-size: 24px;
+    white-space: nowrap;
+  }
+
+  .moon-fact dd {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* Stat row */
+
+  .stats {
+    display: grid;
+    flex: none;
+    grid-template-columns: repeat(6, 1fr);
+    border-top: 1px solid var(--rule);
+  }
+
+  /*
+   * min-width keeps the columns equal: without it a grid item is sized by its
+   * widest unbreakable content, so a long label would stretch its tile instead
+   * of being scaled down to fit one.
+   */
+  .stat {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px 36px;
+  }
+
+  .stat + .stat {
+    border-left: 1px solid var(--rule);
+  }
+
+  /* One line, like the value below it: a long label scales down to fit. */
+  .stat-label {
+    height: 24px;
+    overflow: hidden;
+    color: var(--ink-faint);
+    font-size: 19px;
+    line-height: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+
+  /* One line, always the same height: long values are scaled down to fit. */
+  .stat-value {
+    height: 52px;
+    margin-top: 8px;
+    overflow: hidden;
+    font-size: 42px;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    line-height: 52px;
+    white-space: nowrap;
+  }
+
+  .stat-note {
+    margin-top: 5px;
+    color: var(--ink-muted);
+    font-size: 22px;
+  }
+
+  /*
+   * Portrait screens get the same panels stacked. Orientation is the attribute
+   * main.ts sets from the viewport, so the layout and the scaler agree.
+   */
+
+  [data-orientation='portrait'] .main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 330px 1fr;
+  }
+
+  [data-orientation='portrait'] .clock {
+    font-size: 56px;
+  }
+
+  [data-orientation='portrait'] .sky-panel {
+    grid-row: 2;
+    padding: 56px 56px 28px;
+  }
+
+  /* Moon on top, the sun path panel takes what is left. */
+  [data-orientation='portrait'] .moon-panel {
+    grid-row: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 44px;
+    border-bottom: 1px solid var(--rule);
+    border-left: none;
+    padding: 40px 56px;
+    text-align: left;
+  }
+
+  [data-orientation='portrait'] .moon {
+    width: 244px;
+    height: 244px;
+  }
+
+  [data-orientation='portrait'] .moon-summary {
+    flex: none;
+  }
+
+  [data-orientation='portrait'] .moon-phase {
+    margin-top: 0;
+  }
+
+  [data-orientation='portrait'] .moon-facts {
+    flex: 1;
+    margin: 0;
+    align-content: center;
+  }
+
+  [data-orientation='portrait'] .moon-fact dt {
+    font-size: 22px;
+  }
+
+  [data-orientation='portrait'] .moon-fact dd {
+    font-size: 25px;
+  }
+
+  [data-orientation='portrait'] .stats {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    height: 400px;
+  }
+
+  [data-orientation='portrait'] .stat:nth-child(n + 4) {
+    border-top: 1px solid var(--rule);
+  }
+
+  [data-orientation='portrait'] .stat:nth-child(3n + 1) {
+    border-left: none;
+  }
+
+  [data-orientation='portrait'] .headline {
+    font-size: 54px;
+  }
+}
