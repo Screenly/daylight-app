@@ -21,7 +21,8 @@ export type MomentMode = (typeof MOMENT_MODES)[number]
 
 export type PlaybackMode = 'live' | 'auto_play' | MomentMode
 
-const PLAYBACK_LABELS: Record<Exclude<PlaybackMode, 'live'>, string> = {
+const PLAYBACK_LABELS: Record<PlaybackMode, string> = {
+  live: 'Now',
   auto_play: 'Auto play',
   dawn: 'Dawn',
   sunrise: 'Sunrise',
@@ -34,14 +35,8 @@ const PLAYBACK_LABELS: Record<Exclude<PlaybackMode, 'live'>, string> = {
   season: 'Equinox / solstice',
 }
 
-/**
- * Short name for the active playback mode, or null in live mode so the UI
- * stays quiet on everyday screens.
- */
-export function playbackLabel(mode: PlaybackMode): string | null {
-  if (mode === 'live') {
-    return null
-  }
+/** Short name for the active playback mode, shown under the clock. */
+export function playbackLabel(mode: PlaybackMode): string {
   return PLAYBACK_LABELS[mode]
 }
 

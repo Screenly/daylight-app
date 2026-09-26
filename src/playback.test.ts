@@ -55,8 +55,8 @@ describe('clock override', () => {
 })
 
 describe('playbackLabel', () => {
-  test('live stays quiet', () => {
-    expect(playbackLabel('live')).toBeNull()
+  test('live reads as Now', () => {
+    expect(playbackLabel('live')).toBe('Now')
   })
 
   test('named modes get a short label', () => {

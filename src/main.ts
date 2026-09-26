@@ -57,10 +57,9 @@ function render(place: Place): void {
     place.locale,
     place.timeZone,
   )
-  const modeLabel = playbackLabel(resolvePlaybackMode())
   const playbackElement = element<HTMLElement>('[data-playback]')
-  playbackElement.textContent = modeLabel ?? ''
-  playbackElement.hidden = modeLabel === null
+  playbackElement.textContent = playbackLabel(resolvePlaybackMode())
+  playbackElement.hidden = false
   element('[data-headline]').textContent = headlineText(model, place)
   element('[data-subhead]').textContent = subheadText(model)
 
