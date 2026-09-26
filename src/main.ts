@@ -23,6 +23,7 @@ import {
   subheadText,
 } from './panels.js'
 import { applyPlayback, resolvePlaybackMode } from './playback.js'
+import { playbackLabel } from './playback-moments.js'
 import { resolvePlace, type Place } from './place.js'
 import { buildSkyModel } from './view-model.js'
 
@@ -56,6 +57,10 @@ function render(place: Place): void {
     place.locale,
     place.timeZone,
   )
+  const modeLabel = playbackLabel(resolvePlaybackMode())
+  const playbackElement = element<HTMLElement>('[data-playback]')
+  playbackElement.textContent = modeLabel ?? ''
+  playbackElement.hidden = modeLabel === null
   element('[data-headline]').textContent = headlineText(model, place)
   element('[data-subhead]').textContent = subheadText(model)
 

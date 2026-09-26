@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'bun:test'
 
 import { setClockOverride, now, isClockOverridden } from './clock.js'
-import { instantForMoment } from './playback-moments.js'
+import { instantForMoment, playbackLabel } from './playback-moments.js'
 import type { Place } from './place.js'
 
 const LONDON: Place = {
@@ -51,5 +51,19 @@ describe('clock override', () => {
     expect(now().getTime()).toBe(frozen.getTime())
     setClockOverride(null)
     expect(isClockOverridden()).toBe(false)
+  })
+})
+
+describe('playbackLabel', () => {
+  test('live stays quiet', () => {
+    expect(playbackLabel('live')).toBeNull()
+  })
+
+  test('named modes get a short label', () => {
+    expect(playbackLabel('sunrise')).toBe('Sunrise')
+    expect(playbackLabel('noon')).toBe('Noon')
+    expect(playbackLabel('new_moon')).toBe('New moon')
+    expect(playbackLabel('auto_play')).toBe('Auto play')
+    expect(playbackLabel('season')).toBe('Equinox / solstice')
   })
 })
