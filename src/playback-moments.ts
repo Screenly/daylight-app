@@ -19,6 +19,27 @@ export const MOMENT_MODES = [
 
 export type MomentMode = (typeof MOMENT_MODES)[number]
 
+export type PlaybackMode = 'live' | 'auto_play' | MomentMode
+
+const PLAYBACK_LABELS: Record<PlaybackMode, string> = {
+  live: 'Now',
+  auto_play: 'Auto play',
+  dawn: 'Dawn',
+  sunrise: 'Sunrise',
+  noon: 'Noon',
+  sunset: 'Sunset',
+  dusk: 'Dusk',
+  night: 'Night',
+  full_moon: 'Full moon',
+  new_moon: 'New moon',
+  season: 'Equinox / solstice',
+}
+
+/** Short name for the active playback mode, shown under the clock. */
+export function playbackLabel(mode: PlaybackMode): string {
+  return PLAYBACK_LABELS[mode]
+}
+
 /**
  * Instant for a frozen moment, or null when that event does not exist for the
  * local day containing `at` (defaults to now).

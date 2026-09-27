@@ -9,7 +9,9 @@ import { setClockOverride } from './clock.js'
 import {
   instantForMoment,
   MOMENT_MODES,
+  playbackLabel,
   type MomentMode,
+  type PlaybackMode,
 } from './playback-moments.js'
 import type { Place } from './place.js'
 import { instantFromZoned, zonedParts } from './timezone.js'
@@ -20,10 +22,8 @@ const PLAY_SPEED = 2
 
 export const PLAYBACK_MODES = ['live', 'auto_play', ...MOMENT_MODES] as const
 
-export type PlaybackMode = (typeof PLAYBACK_MODES)[number]
-
-export type { MomentMode }
-export { instantForMoment }
+export type { MomentMode, PlaybackMode }
+export { instantForMoment, playbackLabel }
 
 function isPlaybackMode(value: string): value is PlaybackMode {
   return (PLAYBACK_MODES as readonly string[]).includes(value)
