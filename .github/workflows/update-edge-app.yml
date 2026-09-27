@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - development
-      - main
+      - master
 
 run-name: Updating Daylight in ${{ github.event_name == 'workflow_dispatch' && 'stage' || (github.ref == 'refs/heads/main' && 'production' || 'stage') }}
 
@@ -28,7 +28,7 @@ jobs:
   deploy-production:
     name: Updating Daylight in production
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     environment: production
     steps:
       - uses: actions/checkout@v7
