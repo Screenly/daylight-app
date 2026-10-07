@@ -26,7 +26,7 @@
   "devDependencies": {
     "@photostructure/tz-lookup": "^11.7.0",
     "@screenly/edge-apps": "^26.8.0",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "prettier": "^3.9.9",
     "@types/node": "^26.6.3",
     "npm-run-all2": "^9.0.3",
