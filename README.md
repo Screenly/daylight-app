@@ -1,3 +1,5 @@
+[![Version](https://img.shields.io/github/v/release/Screenly/daylight-app)](https://github.com/Screenly/daylight-app/releases/latest)
+
 # Daylight
 
 ![Screenshot](/screenshots/live-1920x1080.webp)
