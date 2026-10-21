@@ -95,13 +95,28 @@ bun run deploy
 screenly edge-app instance create
 ```
 
-In CI, `Update Edge App` deploys `development` to stage and `main` to
-production. The Edge App id is passed to the action rather than written into
+In CI, `Update Edge App` deploys `master` to stage and `v*` tags to production
+(see [Releasing](#releasing)). The Edge App id is passed to the action rather than written into
 `screenly.yml`, so this repository's manifest carries no `id` and there is no
 `screenly_qc.yml`. Set it per environment as a repository variable,
-`STAGE_EDGE_APP_ID` and `PRODUCTION_EDGE_APP_ID`, or as an `EDGE_APP_ID` secret
-scoped to a GitHub environment, which takes precedence. `Initialize Edge App`
+`STAGE_EDGE_APP_ID` and `PRODUCTION_EDGE_APP_ID`. `Initialize Edge App`
 runs once by hand to create the app in an environment.
+
+### Releasing
+
+Pushes to `master` deploy to stage automatically. To release to production, tag a commit on `master` and push the tag (the workflow refuses tags not on `master`):
+
+```bash
+git checkout master && git pull
+git tag v26.10.0
+git push origin v26.10.0
+```
+
+Then publish a GitHub Release whose notes list the pull requests merged since the previous release. Add `--draft` to review the notes before publishing:
+
+```bash
+gh release create v26.10.0 --verify-tag --generate-notes --title v26.10.0
+```
 
 ## Configuration
 
